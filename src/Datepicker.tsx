@@ -6,24 +6,21 @@ import HomeButton from './HomeButton'
 import Select from 'react-ts-controlled-select'
 import { IYearOption, IMonthOption, IDateOption } from './interfaces'
 import { weekDays, selectMonthOptions } from './datepicker_data'
-import './sass/main.scss'
+import ChildrenBlur from './ChildrenBlur'
+import './dp_main.css'
 
 export interface IDatepickerProps {
   startYear: number
   stopYear: number
-  defaultYear: {
-    label: string
-    value: string
-  }
-  defaultMonth: {
-    label: string
-    value: string
-  }
+  defaultYear: IMonthOption
+  defaultMonth: IYearOption
   selectedDate: IDateOption
   setSelectedDate: React.Dispatch<React.SetStateAction<IDateOption>>
+  isExpanded: boolean
+  setIsExpanded: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Datepicker = ({ startYear, stopYear, defaultYear, defaultMonth, selectedDate, setSelectedDate }: IDatepickerProps): JSX.Element => {
+const Datepicker = ({ startYear, stopYear, defaultYear, defaultMonth, selectedDate, setSelectedDate, isExpanded, setIsExpanded }: IDatepickerProps): JSX.Element => {
   function getYearOptions (startYear: number, stopYear: number): IYearOption[] {
     const yearRange = []
     for (let i = startYear; i <= stopYear; i++) yearRange.push({ label: `${i}`, value: `${i}` })
@@ -31,11 +28,10 @@ const Datepicker = ({ startYear, stopYear, defaultYear, defaultMonth, selectedDa
   }
   const yearOptions = getYearOptions(startYear, stopYear)
   const initialDatesArray = getDates(defaultYear, defaultMonth)
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
   const [selectedMonthOption, setSelectedMonthOption] = useState<IMonthOption>(defaultMonth)
   const [selectedYearOption, setSelectedYearOption] = useState<IYearOption>(defaultYear)
   const [dateRanges, setDateRanges] = useState(initialDatesArray)
-  const isBoundary = {
+  const yearBoundaries = {
     start: parseInt(selectedYearOption.value) === startYear && parseInt(selectedMonthOption.value) === 0,
     end: parseInt(selectedYearOption.value) === stopYear && parseInt(selectedMonthOption.value) === 11
   }
@@ -46,13 +42,14 @@ const Datepicker = ({ startYear, stopYear, defaultYear, defaultMonth, selectedDa
   }, [selectedMonthOption, selectedYearOption])
 
   return (
+    <ChildrenBlur onBlur={() => setIsExpanded(false)} className={`group${isExpanded ? '--focused' : ''}`}>
       <div className='datepicker'>
-        <input className='datepicker-input' type='text' readOnly value={`${formatDate(selectedDate.value)}`} onClick={() => setIsDatePickerOpen(true)}></input>
-            <div className={`datepicker-panel${isDatePickerOpen ? '--focused' : ''}`} tabIndex={0}>
+        <input className='datepicker-input' type='text' readOnly value={`${formatDate(selectedDate.value)}`} onClick={() => setIsExpanded(true)}></input>
+            <div className={`datepicker-panel${isExpanded ? '--focused' : ''}`} tabIndex={0}>
               <div className='datepicker-options'>
                 <NavMonthButton
                 direction={'previous'}
-                boundaries={isBoundary}
+                boundaries={yearBoundaries}
                 selectedMonthOption={selectedMonthOption}
                 selectedYearOption={selectedYearOption}
                 setSelectedMonthOption={setSelectedMonthOption}
@@ -70,21 +67,19 @@ const Datepicker = ({ startYear, stopYear, defaultYear, defaultMonth, selectedDa
                 setSelected={setSelectedYearOption}/>
                 <NavMonthButton
                 direction={'next'}
-                boundaries={isBoundary}
+                boundaries={yearBoundaries}
                 selectedMonthOption={selectedMonthOption}
                 selectedYearOption={selectedYearOption}
                 setSelectedMonthOption={setSelectedMonthOption}
                 setSelectedYearOption={setSelectedYearOption}/>
               </div>
               <div className='datepicker-weekdays'>
-                {weekDays.map(weekDay => { return <div className='cell week-day' key={weekDay}>{weekDay}</div> })}
+                { weekDays.map(weekDay => <div className='cell week-day' key={weekDay}>{weekDay}</div>) }
               </div>
-              <DisplayedDates
-              datesInRange={dateRanges}
-              setSelectedDate={setSelectedDate}
-              setDatePickerOpen={setIsDatePickerOpen}/>
+              <DisplayedDates datesInRange={dateRanges} setSelectedDate={setSelectedDate} setDatePickerOpen={setIsExpanded}/>
             </div>
       </div>
+    </ChildrenBlur>
   )
 }
 

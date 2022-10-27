@@ -1,6 +1,6 @@
 {
   "name": "react-ts-datepicker",
-  "version": "0.1.1",
+  "version": "0.1.9",
   "private": false,
   "scripts": {
     "start": "react-scripts start",
