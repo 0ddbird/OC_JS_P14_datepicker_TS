@@ -10,17 +10,16 @@ interface IHomeButtonProps {
 const HomeButton = ({ setSelectedMonthOption, setSelectedYearOption }: IHomeButtonProps): JSX.Element => {
   function handleNavButtonClick (): void {
     const today = new Date()
-    const todaysYear = today.getFullYear()
-    const todaysMonth = today.getMonth()
-    const result = new Date(todaysYear, todaysMonth)
-
+    const result = new Date(today.getFullYear(), today.getMonth())
+    const month = `${result.getMonth()}`
+    const year = `${result.getFullYear()}`
     const newMonthOption = {
-      label: result.getMonth().toString(),
-      value: result.getMonth().toString()
+      label: month,
+      value: month
     }
     const newYearOption = {
-      label: result.getFullYear().toString(),
-      value: result.getFullYear().toString()
+      label: year,
+      value: year
     }
     setSelectedMonthOption(newMonthOption)
     setSelectedYearOption(newYearOption)

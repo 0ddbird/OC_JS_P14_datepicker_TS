@@ -21,16 +21,16 @@ const NavMonthButton = ({ direction, boundaries, selectedMonthOption, selectedYe
     const currentMonth = parseInt(selectedMonthOption.value)
     const currentYear = parseInt(selectedYearOption.value)
     let result
-    if (target === 'prev') result = new Date(currentYear, currentMonth - 1)
-    else result = new Date(currentYear, currentMonth + 1)
-
+    target === 'prev' ? result = new Date(currentYear, currentMonth - 1) : result = new Date(currentYear, currentMonth + 1)
+    const month = `${result.getMonth()}`
+    const year = `${result.getFullYear()}`
     const newMonthOption = {
-      label: result.getMonth().toString(),
-      value: result.getMonth().toString()
+      label: month,
+      value: month
     }
     const newYearOption = {
-      label: result.getFullYear().toString(),
-      value: result.getFullYear().toString()
+      label: year,
+      value: year
     }
     setSelectedMonthOption(newMonthOption)
     setSelectedYearOption(newYearOption)

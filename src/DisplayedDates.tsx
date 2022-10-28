@@ -12,18 +12,15 @@ const DisplayedDates = ({ datesInRange, setSelectedDate, setDatePickerOpen }: ID
     const today = new Date()
     const simplifiedTodaysDate = new Date(`${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`)
     const simplifiedCurrentDate = new Date(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`)
-    if (simplifiedCurrentDate.getTime() === simplifiedTodaysDate.getTime()) {
-      return <DateButton date={date} key={date.toString()} month={month} isToday={true} setSelectedDate={setSelectedDate} setDatePickerOpen={setDatePickerOpen}/>
-    } else {
-      return <DateButton date={date} key={date.toString()} month={month} isToday={false} setSelectedDate={setSelectedDate} setDatePickerOpen={setDatePickerOpen}/>
-    }
+    const isToday = simplifiedCurrentDate.getTime() === simplifiedTodaysDate.getTime()
+    return <DateButton date={date} key={date.toString()} month={month} isToday={isToday} setSelectedDate={setSelectedDate} setDatePickerOpen={setDatePickerOpen}/>
   }
 
   return (
     <div className='date-picker__dates'>
-      { datesInRange.previousMonth?.map(date => { return createDateButton(date, 'previous') })}
-      { datesInRange.currentMonth.map(date => { return createDateButton(date, 'current') })}
-      { datesInRange.nextMonth?.map(date => { return createDateButton(date, 'next') })}
+      { datesInRange.previousMonth?.map(date => createDateButton(date, 'previous'))}
+      { datesInRange.currentMonth.map(date => createDateButton(date, 'current'))}
+      { datesInRange.nextMonth?.map(date => createDateButton(date, 'next'))}
     </div>
 
   )

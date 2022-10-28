@@ -6,10 +6,11 @@ interface IDateButtonProps {
   month: 'previous' | 'current' | 'next'
   setSelectedDate: React.Dispatch<React.SetStateAction<IDateOption>>
   setDatePickerOpen: React.Dispatch<React.SetStateAction<boolean>>
-  isToday: Boolean
+  isToday: boolean
 }
 
 const DateButton = ({ date, month, setSelectedDate, setDatePickerOpen, isToday }: IDateButtonProps): JSX.Element => {
+  const className = isToday ? `cell date ${month}-month-date today` : `cell date ${month}-month-date`
   function formatDateValue (dateString: string): IDateOption {
     const date = new Date(dateString)
     return {
@@ -23,14 +24,7 @@ const DateButton = ({ date, month, setSelectedDate, setDatePickerOpen, isToday }
     setDatePickerOpen(false)
   }
 
-  const className = isToday === true ? `cell date ${month}-month-date today` : `cell date ${month}-month-date`
-  return <button
-  type='button'
-  className= {className}
-  value={date.toString()}
-  onClick={(e) => handleDatePick(e)}>
-  {date.getDate()}
-  </button>
+  return <button type='button' className= {className} value={date.toString()} onClick={handleDatePick}> {date.getDate()} </button>
 }
 
 export default DateButton
